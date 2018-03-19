@@ -169,6 +169,7 @@ button.round.big{
 }
 .parent{
     text-align: center;
+    width: 460px;
 }
 .wrap{
     padding-right: 60px;
