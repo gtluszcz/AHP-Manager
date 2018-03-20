@@ -125,16 +125,13 @@ button.round.big{
 }
 .links, .rechts{
     width: calc(50vw);
-    //background-color: red;
-}
-.links{
-    float: left;
 }
 .rechts{
-    float: right;
+    margin-top: -30px;
 }
 .result{
     margin: 0 calc(40px + 20px);
+    margin-bottom: 100px;
     margin-top: 2rem;
     overflow-x: scroll;
     background: #292b36;
@@ -170,6 +167,7 @@ button.round.big{
 .parent{
     text-align: center;
     width: 460px;
+    margin: 30px 0 10px;
 }
 .wrap{
     padding-right: 60px;

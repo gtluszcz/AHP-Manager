@@ -1,272 +1,162 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>AHP Manager</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="fonts/fonts.css">
-</head>
-<body>
-<h1 class="title">AHP manager</h1>
-<h3 class="subtitle">made by: <a href="https://github.com/gtluszcz">@gtluszcz</a> <a href="https://github.com/dczajkowski">@DCzajkowski</a></h3>
+    <head>
+        <title>AHP Manager</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+    </head>
+    <body>
+        <h1 class="title">AHP manager</h1>
+        <h3 class="subtitle">
+            made by:
+            <a href="https://github.com/gtluszcz">@gtluszcz</a>
+            <a href="https://github.com/dczajkowski">@DCzajkowski</a>
+        </h3>
 
-<div id="app">
+        <div id="app">
+            <div class="alternatives">
+                <div class="controls-wrap">
+                    <button class="left big" @click="subtract" v-if="alternatives.lenght != 0">-</button>
+                    <button class="right big" @click="add">+</button>
+                </div>
 
-    <div class="alternatives">
-        <div class="controls-wrap">
-            <button class="left big" @click="subtract" v-if="alternatives.lenght != 0">-</button>
-            <button class="right big" @click="add">+</button>
-        </div>
-
-        <input type="text" class="alt"v-for="alter in alternatives" class="alternative"  v-model="alter.value" placeholder="alternative">
-    </div>
-
-    <div class="row">
-        <div class="links">
-            <recursive-madness
-                    :subtree="tree"
-                    :initial-criterion="tree.name"
-                    :key="tree.name"
-            ></recursive-madness>
-        </div>
-        <div class="rechts">
-            <question
-                    :subtree="tree"
-                    :initial-criterion="tree.name"
-                    :key="tree.name"
-            ></question>
-            <question2
-                    :subtree="tree"
-                    :initial-criterion="tree.name"
-                    :alternatives="alternatives"
-                    :key="Math.random()"
-            ></question2>
-        </div>
-    </div>
-    <div class="result">
-        <pre v-text="JSON.stringify(renderedTree(), null, 2)"></pre>
-    </div>
-</div>
-
-
-
-<template id="recursive-madness">
-    <div class="level">
-        <div class="row">
-            <input type="text" class="cell" v-model="criterion" @blur="onBlur" placeholder="Enter subcriteria">
-            <div>
-                <button class="left" @click="subtract(subtree.name)" v-if="subtree.criterias !== null && this.$parent.subtree != null">-</button>
-                <button class="right" @click="add" v-if="subtree.criterias !== null && this.$parent.subtree != null">+</button>
-                <button class="right round" @click="add" v-if="subtree.criterias !== null && this.$parent.subtree == null">+</button>
-
+                <input
+                    type="text"
+                    class="alt"
+                    v-for="alter in alternatives"
+                    class="alternative"
+                    v-model="alter.value"
+                    placeholder="alternative"
+                >
             </div>
-        </div>
 
-        <div v-if="subtree !== null">
-            <div v-for="criterion in subtree.criterias">
-                <recursive-madness
-                        :subtree="criterion"
-                        :initial-criterion="criterion.name"
-                        :key="criterion.name"
-                ></recursive-madness>
-            </div>
-        </div>
-    </div>
-</template>
-
-<template id="question">
-    <div class="wrap">
-        <div class="parent" v-if="subtree.criterias.length > 1">based on: {{subtree.name}}</div>
-        <div class="div" v-for="i in subtree.criterias">
-            <div class="div" v-for="j in subtree.criterias">
-                <div class="row" v-if="subtree.criterias.indexOf(j) > subtree.criterias.indexOf(i)" ><div class="alt">{{i.name}}</div><input type="text" class="alt number" @change="refresh(subtree,subtree.criterias.indexOf(i),subtree.criterias.indexOf(j),$event)" v-model.number="subtree.matrix[subtree.criterias.indexOf(i)*subtree.criterias.length+subtree.criterias.indexOf(j)].value" placeholder="0"><div class="alt">{{j.name}}</div></div>
-
-            </div>
-        </div>
-
-        <div v-if="subtree !== null">
-            <div v-for="criterion in subtree.criterias">
-                <question
-                        :subtree="criterion"
-                        :initial-criterion="criterion.name"
-                        :key="criterion.name"
-                ></question>
-            </div>
-        </div>
-    </div>
-</template>
-
-<template id="question2">
-    <div class="wrap" >
-        <div v-if="subtree.criterias.length == 0">
-            <div class="parent" v-if="alternatives.length > 1" >based on: {{subtree.name}}</div>
-            <div class="div" v-for="i in alternatives">
-                <div class="div" v-for="j in alternatives">
-                    <div class="row" v-if="alternatives.indexOf(j) > alternatives.indexOf(i)" ><div class="alt">{{i.value}}</div><input type="text" class="alt number" @change="refresh(subtree,alternatives.indexOf(i),alternatives.indexOf(j),$event)" v-model.number="subtree.matrix[alternatives.indexOf(i)*alternatives.length+alternatives.indexOf(j)].value" placeholder="0"><div class="alt">{{j.value}}</div></div>
-
+            <div class="row">
+                <div class="links">
+                    <recursive-madness
+                        :subtree="tree"
+                        :initial-criterion="tree.name"
+                        :key="tree.name"
+                    ></recursive-madness>
+                </div>
+                <div class="rechts">
+                    <question
+                        :subtree="tree"
+                        :initial-criterion="tree.name"
+                        :key="tree.name"
+                    ></question>
+                    <question2
+                        :subtree="tree"
+                        :initial-criterion="tree.name"
+                        :alternatives="alternatives"
+                        :key="Math.random()"
+                    ></question2>
                 </div>
             </div>
-        </div>
-
-        <div v-if="subtree !== null">
-            <div v-for="criterion in subtree.criterias">
-                <question2
-                        :subtree="criterion"
-                        :initial-criterion="criterion.name"
-                        :alternatives="alternatives"
-                        :key="criterion.name"
-                ></question2>
+            <div class="result">
+                <pre v-text="renderedTree()"></pre>
             </div>
         </div>
-    </div>
-</template>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.js"></script>
-<script>
-    Vue.component('recursive-madness', {
-        props: ['subtree', 'initialCriterion'],
-        template: '#recursive-madness',
-        data() {
-            return {
-                criterion: this.initialCriterion,
-            }
-        },
-        methods: {
-            add() {
+        <template id="recursive-madness">
+            <div class="level">
+                <div class="row">
+                    <input type="text" class="cell" v-model="criterion" @blur="onBlur" placeholder="Enter subcriteria">
+                    <div>
+                        <button
+                            class="left"
+                            @click="subtract(subtree.name)"
+                            v-if="subtree.criterias !== null && this.$parent.subtree != null"
+                        >-</button>
+                        <button
+                            class="right"
+                            :class="{ round: this.$parent.subtree == null }"
+                            @click="add"
+                            v-if="subtree.criterias !== null"
+                        >+</button>
+                    </div>
+                </div>
 
-                this.subtree.criterias.push({
-                    'name': '',
-                    'matrix': [],
-                    'criterias': [],
-                })
+                <div v-if="subtree !== null">
+                    <div v-for="criterion in subtree.criterias">
+                        <recursive-madness
+                            :subtree="criterion"
+                            :initial-criterion="criterion.name"
+                            :key="criterion.name"
+                        ></recursive-madness>
+                    </div>
+                </div>
+            </div>
+        </template>
 
+        <template id="question">
+            <div class="wrap">
+                <div class="parent" v-if="subtree.criterias.length > 1">based on: {{ subtree.name }}</div>
+                <div class="div" v-for="i in subtree.criterias">
+                    <div class="div" v-for="j in subtree.criterias">
+                        <div class="row" v-if="subtree.criterias.indexOf(j) > subtree.criterias.indexOf(i)">
+                            <div class="alt">{{ i.name }}</div>
+                            <input
+                                type="text"
+                                class="alt number"
+                                @change="refresh(subtree, subtree.criterias.indexOf(i), subtree.criterias.indexOf(j), $event)"
+                                v-model.number="subtree.matrix[subtree.criterias.indexOf(i) * subtree.criterias.length + subtree.criterias.indexOf(j)].value"
+                                placeholder="0"
+                            >
+                            <div class="alt">{{ j.name }}</div>
+                        </div>
+                    </div>
+                </div>
 
-                this.subtree.matrix = []
-                let n = this.subtree.criterias.length
-                for (let i = 0; i < n; i++) {
-                    for (let j = 0; j < n; j++) {
-                        this.subtree.matrix[i * n + j] = (i === j) ? {value: 1} : {value: 0}
-                    }
-                }
+                <div v-if="subtree !== null">
+                    <div v-for="criterion in subtree.criterias">
+                        <question
+                            :subtree="criterion"
+                            :initial-criterion="criterion.name"
+                            :key="criterion.name"
+                        ></question>
+                    </div>
+                </div>
+            </div>
+        </template>
 
+        <template id="question2">
+            <div class="wrap" >
+                <div v-if="subtree.criterias.length == 0">
+                    <div class="parent" v-if="alternatives.length > 1" >based on: {{ subtree.name }}</div>
+                    <div class="div" v-for="i in alternatives">
+                        <div class="div" v-for="j in alternatives">
+                            <div
+                                class="row"
+                                v-if="alternatives.indexOf(j) > alternatives.indexOf(i)"
+                            >
+                                <div class="alt">{{ i.value }}</div>
+                                <input
+                                    type="text"
+                                    class="alt number"
+                                    @change="refresh(subtree,alternatives.indexOf(i),alternatives.indexOf(j),$event)"
+                                    v-model.number="subtree.matrix[alternatives.indexOf(i) * alternatives.length + alternatives.indexOf(j)].value"
+                                    placeholder="0"
+                                >
+                                <div class="alt">{{ j.value }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                app.setLastMatrixes(app.tree)
-            },
-            subtract(name) {
-                console.log(this.$parent.subtree.criterias.indexOf(this.subtree))
-                this.$parent.subtree.criterias.splice(this.$parent.subtree.criterias.indexOf(this.subtree),1)
+                <div v-if="subtree !== null">
+                    <div v-for="criterion in subtree.criterias">
+                        <question2
+                            :subtree="criterion"
+                            :initial-criterion="criterion.name"
+                            :alternatives="alternatives"
+                            :key="criterion.name"
+                        ></question2>
+                    </div>
+                </div>
+            </div>
+        </template>
 
-                this.subtree.matrix = []
-                let n = this.subtree.criterias.length
-                for (let i = 0; i < n; i++) {
-                    for (let j = 0; j < n; j++) {
-                        this.subtree.matrix[i * n + j] = (i === j) ? {value: 1} : {value: 0}
-                    }
-                }
-
-                app.setLastMatrixes(app.tree)
-
-            },
-            onBlur() {
-                this.subtree.name = this.criterion
-            },
-        },
-    })
-
-    Vue.component('question', {
-        props: ['subtree', 'initialCriterion',],
-        template: '#question',
-        data() {
-            return {
-
-            }
-        },
-        methods:{
-            refresh(subtree,i,j,event){
-                console.log(event)
-                //subtree.matrix[i*app.alternatives.length+j].value = parseFloat(event.target.value)
-                console.log(subtree.matrix,i,j)
-                subtree.matrix[j*subtree.criterias.length+i].value = parseFloat(1/event.target.value)
-                app.$forceUpdate();
-            }
-        },
-    })
-
-    Vue.component('question2', {
-        props: ['subtree', 'initialCriterion','alternatives'],
-        template: '#question2',
-        data() {
-            return {
-
-            }
-        },
-        methods:{
-            refresh(subtree,i,j,event){
-                console.log(event)
-                //subtree.matrix[i*app.alternatives.length+j].value = parseFloat(event.target.value)
-                subtree.matrix[j*app.alternatives.length+i].value = parseFloat(1/event.target.value)
-                app.$forceUpdate();
-            }
-        },
-    })
-
- let app = new Vue({
-        el: '#app',
-        data: {
-            alternatives: [],
-            tree: {
-                'name': 'Goal',
-                'matrix': [],
-                'criterias': [],
-            },
-        },
-        methods: {
-            renderedTree() {
-                //return this.tree
-                let Goal = {}
-                Goal.alternatives = this.alternatives.map(el => el.value)
-                Goal[this.tree.name] = this.renderNode(this.tree)
-                return Goal
-            },
-            renderNode(node){
-                if(node.criterias != null && node.criterias.length > 0){
-                    let goal = {}
-                    goal["matrix"] = node.matrix.map(el => el.value)
-                    for(sub of node.criterias){
-                        goal[sub.name] = this.renderNode(sub)
-                    }
-                    return goal
-                }
-                else {
-                    return node.matrix.map(el => el.value)
-                }
-            },
-
-            add(){
-                this.alternatives.push({value: ""})
-                this.setLastMatrixes(this.tree)
-            },
-
-            setLastMatrixes(node){
-                if (node.criterias != null && node.criterias.length > 0){
-                    for (i of node.criterias){
-                        this.setLastMatrixes(i)
-                    }
-                }else {
-                    node.matrix = []
-                    let n = this.alternatives.length
-                    for (let i = 0; i < n; i++) {
-                        for (let j = 0; j < n; j++) {
-                            node.matrix[i * n + j] = (i === j) ? {value: 1} : {value: 0}
-                        }
-                    }
-                }
-            },
-            subtract(){
-                this.alternatives.splice(this.alternatives.length-1,1)
-                this.setLastMatrixes(this.tree)
-            }
-        }
-    })
-</script>
-</body>
+        <script src="vue.js"></script>
+        <script src="app.js"></script>
+    </body>
 </html>
