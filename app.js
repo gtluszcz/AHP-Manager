@@ -53,7 +53,7 @@ Vue.component('question', {
 })
 
 Vue.component('question2', {
-    props: ['subtree', 'initialCriterion','alternatives'],
+    props: ['subtree', 'initialCriterion', 'alternatives'],
     template: '#question2',
     methods: {
         refresh(subtree, i, j, event) {
