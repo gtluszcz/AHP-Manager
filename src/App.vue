@@ -1,15 +1,17 @@
 <template>
-    <div>
+    <div class="container">
         <h1 class="title">AHP manager</h1>
         <h3 class="subtitle">
-            made by:
-            <a href="https://github.com/gtluszcz">@gtluszcz</a>
-            <a href="https://github.com/dczajkowski">@DCzajkowski</a>
+            Made by
+            <a href="https://github.com/gtluszcz">Grzegorz Tłuszcz</a>
+            and
+            <a href="https://github.com/dczajkowski">Dariusz Czajkowski</a>
         </h3>
 
         <file-picker @file="newFile"></file-picker>
 
         <div>
+            <h3>Alternatives</h3>
             <div class="alternatives">
                 <div class="controls-wrap">
                     <button class="left big" @click="subtract" :disabled="alternatives.length === 0">-</button>
@@ -22,11 +24,11 @@
                     v-for="alter in alternatives"
                     v-model="alter.value"
                     placeholder="alternative"
-                    :key="alter"
+                    :key="alter.id"
                 >
             </div>
 
-            <div class="row">
+            <div class="row row-top">
                 <div class="links">
                     <recursive-madness
                         :subtree="tree"
@@ -61,10 +63,14 @@
     import Question from './components/Question'
     import Question2 from './components/Question2'
     import FilePicker from './components/FilePicker'
+    import eventHub from './eventHub'
 
     export default {
         props: ['alternatives', 'tree'],
         name: 'App',
+        mounted() {
+            eventHub.$on('update', () => this.$forceUpdate())
+        },
         components: {
             RecursiveMadness,
             Question,
@@ -73,7 +79,7 @@
         },
         methods: {
             add() {
-                this.$root.alternatives.push({ value: '' })
+                this.$root.alternatives.push({ value: '', id: Math.random() })
                 this.$root.setLastMatrixes(this.tree)
             },
             subtract() {
@@ -82,7 +88,7 @@
             },
             newFile(contents) {
                 this.$root.tree = this.convertToOurs(contents)
-                this.$root.$forceUpdate()
+                eventHub.$emit('update')
             },
             renderedTree() {
                 const goal = {}
@@ -141,34 +147,43 @@
     * {
         margin: 0;
         padding: 0;
+        box-sizing: border-box;
     }
 
     body {
         background: linear-gradient(180deg, rgb(35, 200, 219) 0%, rgb(27, 156, 212) 50%, rgb(74, 86, 226) 100%);
-        min-width: 100vw;
+        min-height: 100vh;
         color: white;
         font-family: Montserrat;
-        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 1000px;
+        padding: 0 2rem;
     }
 
     .title {
-        margin: 0 auto;
         text-align: center;
         text-transform: uppercase;
         letter-spacing: 0.2em;
-        margin-top: 100px;
-        margin-bottom: 10px;
+        margin-top: 6rem;
+        margin-bottom: 1rem;
     }
 
     .subtitle {
         margin: 0 auto;
         text-align: center;
         font-weight: 100;
-        font-size: 16px;
+        font-size: 1rem;
         margin-bottom: 2rem;
     }
 
-    a, a:focus {
+    .subtitle a,
+    .subtitle a:focus {
+        font-style: italic;
         text-decoration: none;
         color: inherit;
     }
@@ -180,21 +195,19 @@
         flex-direction: column;
     }
 
-    .cell, .alt {
-        min-width: 200px;
+    .cell {
+        flex: 1;
         text-align: left;
         background-color: transparent;
         outline: none;
         border: none;
         font-weight: 600;
         margin: 0;
-        padding: 0 20px;
         font-family: Montserrat;
         font-size: 20px;
         transition: 0.1s width ease;
         color: white;
         opacity: 1;
-
     }
 
     .cell::placeholder {
@@ -207,25 +220,50 @@
         color: cornflowerblue;
     }
 
-    .alt {
-        min-width: 40px;
-        width: 120px;
-        height: 36px;
-        margin: 2px 10px;
-        flex-shrink: 0;
-        background-color: white;
-        color: cornflowerblue;
+    .row > .alt:not(.number) {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .alt.number {
+        width: 3rem;
         text-align: center;
-        border-radius: 18px;
-        line-height: 36px;
+        margin: 0 1rem;
+    }
+
+    .row {
+        margin-bottom: 1rem;
+    }
+
+    .parent {
+        margin: 3rem 0 1rem;
+        display: flex;
+        justify-content: center;
+    }
+
+    .alt {
+        padding: .7rem 1rem;
+        background: #fff;
+        color: cornflowerblue;
+        border-radius: 5rem;
+        border: none;
+        outline: none;
+        height: 2.5rem;
+    }
+
+    .alternatives > .alt {
+        margin-right: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .rechts {
+        margin-top: -3rem;
     }
 
     .nest {
         padding-left: 2rem;
-    }
-
-    #recursive-madness {
-        display: none;
     }
 
     button {
@@ -274,34 +312,8 @@
         border-radius: 18px;
     }
 
-    .row {
-        display: flex;
-        justify-content: flex-start;
-    }
-
-    .links, .rechts {
-        width: calc(50vw);
-    }
-
-    .rechts {
-        margin-top: -30px;
-    }
-
-    textarea.result {
-        display: block;
-        border: 0;
-        /*width: 100%;*/
-        box-sizing: border-box;
-        width: calc(100% - 120px);
-        height: 30rem;
-        margin: 120px 60px 0;
-        resize: none;
-    }
-
     .result {
-        margin: 0 calc(40px + 20px);
         margin-bottom: 100px;
-        margin-top: 2rem;
         overflow-x: scroll;
         background: #292b36;
         padding: 1rem 1.5rem;
@@ -311,40 +323,68 @@
         font-size: .9rem;
         font-weight: 300;
         color: #fff;
-        -webkit-box-shadow: inset 0 0 12px #151515, 1px 1px 11px #464646;
         box-shadow: inset 0 0 12px #151515, 1px 1px 11px #464646
     }
 
     .controls-wrap {
-        width: 72px;
+        width: 4.5rem;
         margin-right: 20px;
     }
 
+    .buttons {
+        width: 4.5rem;
+    }
+
+    h3 {
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+    }
+
     .alternatives {
-        padding: 0 calc(40px + 20px);
-        margin: 40px 0;
+        margin: 0 0 7rem;
         display: flex;
         flex-direction: row;
-        justify-content: flex-start;
+        justify-content: space-between;
         flex-wrap: wrap;
     }
 
-    #app {
+    .alternatives:after {
+        content: '';
+        flex: auto;
+    }
+
+    .links > .level {
+        padding-left: 0;
+    }
+
+    .row-top {
         display: flex;
-        flex-direction: column;
+        margin-bottom: 3rem;
     }
 
-    .number {
-        width: 36px;
+    .links, .rechts {
+        flex: 1;
     }
 
-    .parent {
-        text-align: center;
-        width: 460px;
-        margin: 30px 0 10px;
+    .links {
+        padding-right: 2rem;
     }
 
-    .wrap {
-        padding-right: 60px;
+    .rechts {
+        padding-left: 2rem;
+    }
+
+    .row {
+        display: flex;
+    }
+
+    @media (max-width: 930px) {
+        .row-top {
+            flex-direction: column;
+        }
+
+        .rechts {
+            margin-top: 2rem;
+        }
     }
 </style>

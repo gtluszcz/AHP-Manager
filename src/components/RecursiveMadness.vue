@@ -2,7 +2,7 @@
     <div class="level">
         <div class="row">
             <input type="text" class="cell" v-model="criterion" @blur="onBlur" placeholder="Enter subcriteria">
-            <div>
+            <div class="buttons">
                 <button
                     class="left"
                     @click="subtract()"
@@ -18,11 +18,11 @@
         </div>
 
         <div v-if="subtree !== null">
-            <div v-for="criterion in subtree.criteria" :key="criterion.name">
+            <div v-for="criterion in subtree.criteria" :key="criterion.id">
                 <recursive-madness
                     :subtree="criterion"
                     :initial-criterion="criterion.name"
-                    :key="criterion.name"
+                    :key="criterion.id"
                 ></recursive-madness>
             </div>
         </div>
@@ -30,6 +30,8 @@
 </template>
 
 <script>
+    import eventHub from '../eventHub'
+
     export default {
         name: 'RecursiveMadness',
         props: ['subtree', 'initialCriterion'],
@@ -41,13 +43,15 @@
         methods: {
             add() {
                 this.subtree.criteria.push({
-                    'name': '',
-                    'matrix': [],
-                    'criteria': [],
+                    name: '',
+                    matrix: [],
+                    criteria: [],
+                    id: Math.random(),
                 })
 
                 this.setMatrix()
                 this.$root.setLastMatrixes(this.$root.tree)
+                eventHub.$emit('update')
             },
             subtract() {
                 this.$parent.subtree.criteria.splice(this.$parent.subtree.criteria.indexOf(this.subtree), 1)
@@ -68,6 +72,7 @@
             },
             onBlur() {
                 this.subtree.name = this.criterion
+                eventHub.$emit('update')
             },
         },
     }

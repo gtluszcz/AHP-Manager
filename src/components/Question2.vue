@@ -2,8 +2,8 @@
     <div class="wrap">
         <div v-if="subtree.criteria.length == 0">
             <div class="parent" v-if="alternatives.length > 1">based on: {{ subtree.name }}</div>
-            <div class="div" v-for="i in alternatives" :key="i.name">
-                <div class="div" v-for="j in alternatives" :key="j.name">
+            <div class="div" v-for="i in alternatives" :key="i.id">
+                <div class="div" v-for="j in alternatives" :key="j.id">
                     <div
                         class="row"
                         v-if="alternatives.indexOf(j) > alternatives.indexOf(i)"
@@ -32,12 +32,12 @@
         </div>
 
         <div v-if="subtree !== null">
-            <div v-for="criterion in subtree.criteria" :key="criterion.name">
+            <div v-for="criterion in subtree.criteria" :key="criterion.id">
                 <question2
                     :subtree="criterion"
                     :initial-criterion="criterion.name"
                     :alternatives="alternatives"
-                    :key="criterion.name"
+                    :key="criterion.id"
                 ></question2>
             </div>
         </div>
@@ -45,6 +45,8 @@
 </template>
 
 <script>
+    import eventHub from '../eventHub'
+
     export default {
         name: 'Question2',
         props: ['subtree', 'initialCriterion', 'alternatives'],
@@ -52,7 +54,7 @@
             refresh(subtree, i, j, event) {
                 subtree.matrix[j * this.$root.alternatives.length + i].value = parseFloat(1 / event.target.value)
 
-                this.$root.$forceUpdate()
+                eventHub.$emit('update')
             },
         },
     }
