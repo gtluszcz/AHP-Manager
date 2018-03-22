@@ -114,7 +114,7 @@ new Vue({
 
                 for (let i = 0; i < n; i++) {
                     for (let j = 0; j < n; j++) {
-                        node.matrix[i * n + j] = (i === j) ? {value: 1} : {value: 0}
+                        node.matrix[i * n + j] = (i === j) ? { value: 1 } : { value: 0 }
                     }
                 }
             }
