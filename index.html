@@ -65,19 +65,19 @@
                         <button
                             class="left"
                             @click="subtract(subtree.name)"
-                            v-if="subtree.criterias !== null && this.$parent.subtree != null"
+                            v-if="subtree.criteria !== null && this.$parent.subtree != null"
                         >-</button>
                         <button
                             class="right"
                             :class="{ round: this.$parent.subtree == null }"
                             @click="add"
-                            v-if="subtree.criterias !== null"
+                            v-if="subtree.criteria !== null"
                         >+</button>
                     </div>
                 </div>
 
                 <div v-if="subtree !== null">
-                    <div v-for="criterion in subtree.criterias">
+                    <div v-for="criterion in subtree.criteria">
                         <recursive-madness
                             :subtree="criterion"
                             :initial-criterion="criterion.name"
@@ -90,16 +90,16 @@
 
         <template id="question">
             <div class="wrap">
-                <div class="parent" v-if="subtree.criterias.length > 1">based on: {{ subtree.name }}</div>
-                <div class="div" v-for="i in subtree.criterias">
-                    <div class="div" v-for="j in subtree.criterias">
-                        <div class="row" v-if="subtree.criterias.indexOf(j) > subtree.criterias.indexOf(i)">
+                <div class="parent" v-if="subtree.criteria.length > 1">based on: {{ subtree.name }}</div>
+                <div class="div" v-for="i in subtree.criteria">
+                    <div class="div" v-for="j in subtree.criteria">
+                        <div class="row" v-if="subtree.criteria.indexOf(j) > subtree.criteria.indexOf(i)">
                             <div class="alt">{{ i.name }}</div>
                             <input
                                 type="text"
                                 class="alt number"
-                                @change="refresh(subtree, subtree.criterias.indexOf(i), subtree.criterias.indexOf(j), $event)"
-                                v-model.number="subtree.matrix[subtree.criterias.indexOf(i) * subtree.criterias.length + subtree.criterias.indexOf(j)].value"
+                                @change="refresh(subtree, subtree.criteria.indexOf(i), subtree.criteria.indexOf(j), $event)"
+                                v-model.number="subtree.matrix[subtree.criteria.indexOf(i) * subtree.criteria.length + subtree.criteria.indexOf(j)].value"
                                 placeholder="0"
                             >
                             <div class="alt">{{ j.name }}</div>
@@ -108,7 +108,7 @@
                 </div>
 
                 <div v-if="subtree !== null">
-                    <div v-for="criterion in subtree.criterias">
+                    <div v-for="criterion in subtree.criteria">
                         <question
                             :subtree="criterion"
                             :initial-criterion="criterion.name"
@@ -121,7 +121,7 @@
 
         <template id="question2">
             <div class="wrap" >
-                <div v-if="subtree.criterias.length == 0">
+                <div v-if="subtree.criteria.length == 0">
                     <div class="parent" v-if="alternatives.length > 1" >based on: {{ subtree.name }}</div>
                     <div class="div" v-for="i in alternatives">
                         <div class="div" v-for="j in alternatives">
@@ -144,7 +144,7 @@
                 </div>
 
                 <div v-if="subtree !== null">
-                    <div v-for="criterion in subtree.criterias">
+                    <div v-for="criterion in subtree.criteria">
                         <question2
                             :subtree="criterion"
                             :initial-criterion="criterion.name"

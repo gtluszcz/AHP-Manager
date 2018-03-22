@@ -8,17 +8,17 @@ Vue.component('recursive-madness', {
     },
     methods: {
         add() {
-            this.subtree.criterias.push({
+            this.subtree.criteria.push({
                 'name': '',
                 'matrix': [],
-                'criterias': [],
+                'criteria': [],
             })
 
             this.setMatrix()
             this.$root.setLastMatrixes(this.$root.tree)
         },
         subtract(name) {
-            this.$parent.subtree.criterias.splice(this.$parent.subtree.criterias.indexOf(this.subtree), 1)
+            this.$parent.subtree.criteria.splice(this.$parent.subtree.criteria.indexOf(this.subtree), 1)
 
             this.setMatrix()
             this.$root.setLastMatrixes(this.$root.tree)
@@ -26,7 +26,7 @@ Vue.component('recursive-madness', {
         setMatrix() {
             this.subtree.matrix = []
 
-            const n = this.subtree.criterias.length
+            const n = this.subtree.criteria.length
 
             for (let i = 0; i < n; i++) {
                 for (let j = 0; j < n; j++) {
@@ -45,7 +45,7 @@ Vue.component('question', {
     template: '#question',
     methods: {
         refresh(subtree, i, j, event) {
-            subtree.matrix[j * subtree.criterias.length + i].value = parseFloat(1 / event.target.value)
+            subtree.matrix[j * subtree.criteria.length + i].value = parseFloat(1 / event.target.value)
 
             this.$root.$forceUpdate()
         },
@@ -71,7 +71,7 @@ new Vue({
         tree: {
             'name': 'Goal',
             'matrix': [],
-            'criterias': [],
+            'criteria': [],
         },
     },
     methods: {
@@ -84,12 +84,12 @@ new Vue({
             return JSON.stringify(goal, null, 2)
         },
         renderNode(node) {
-            if (node.criterias != null && node.criterias.length > 0) {
+            if (node.criteria != null && node.criteria.length > 0) {
                 const goal = {}
 
                 goal['matrix'] = node.matrix.map(el => el.value)
 
-                for (sub of node.criterias) {
+                for (sub of node.criteria) {
                     goal[sub.name] = this.renderNode(sub)
                 }
 
@@ -103,8 +103,8 @@ new Vue({
             this.setLastMatrixes(this.tree)
         },
         setLastMatrixes(node) {
-            if (node.criterias != null && node.criterias.length > 0) {
-                for (i of node.criterias) {
+            if (node.criteria != null && node.criteria.length > 0) {
+                for (i of node.criteria) {
                     this.setLastMatrixes(i)
                 }
             } else {
