@@ -16,15 +16,14 @@
         <div id="app">
             <div class="alternatives">
                 <div class="controls-wrap">
-                    <button class="left big" @click="subtract" v-if="alternatives.lenght != 0">-</button>
+                    <button class="left big" @click="subtract" :disabled="alternatives.length === 0">-</button>
                     <button class="right big" @click="add">+</button>
                 </div>
 
                 <input
                     type="text"
-                    class="alt"
+                    class="alt alternative"
                     v-for="alter in alternatives"
-                    class="alternative"
                     v-model="alter.value"
                     placeholder="alternative"
                 >
@@ -98,8 +97,17 @@
                             <input
                                 type="text"
                                 class="alt number"
-                                @change="refresh(subtree, subtree.criteria.indexOf(i), subtree.criteria.indexOf(j), $event)"
-                                v-model.number="subtree.matrix[subtree.criteria.indexOf(i) * subtree.criteria.length + subtree.criteria.indexOf(j)].value"
+                                @change="refresh(
+                                    subtree,
+                                    subtree.criteria.indexOf(i),
+                                    subtree.criteria.indexOf(j),
+                                    $event
+                                )"
+                                v-model.number="subtree.matrix[
+                                    subtree.criteria.indexOf(i)
+                                    * subtree.criteria.length
+                                    + subtree.criteria.indexOf(j)
+                                ].value"
                                 placeholder="0"
                             >
                             <div class="alt">{{ j.name }}</div>
@@ -133,8 +141,17 @@
                                 <input
                                     type="text"
                                     class="alt number"
-                                    @change="refresh(subtree,alternatives.indexOf(i),alternatives.indexOf(j),$event)"
-                                    v-model.number="subtree.matrix[alternatives.indexOf(i) * alternatives.length + alternatives.indexOf(j)].value"
+                                    @change="refresh(
+                                        subtree,
+                                        alternatives.indexOf(i),
+                                        alternatives.indexOf(j),
+                                        $event
+                                    )"
+                                    v-model.number="subtree.matrix[
+                                        alternatives.indexOf(i)
+                                        * alternatives.length
+                                        + alternatives.indexOf(j)
+                                    ].value"
                                     placeholder="0"
                                 >
                                 <div class="alt">{{ j.value }}</div>
