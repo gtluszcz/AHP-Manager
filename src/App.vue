@@ -52,6 +52,9 @@
             </div>
 
             <div class="result">
+                <div class="clipboard" ref="clipboard" :data-clipboard-text="renderedTree()" title="Copy to clipboard">
+                    <svg fill="#fff" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>
+                </div>
                 <pre v-text="renderedTree()"></pre>
             </div>
         </div>
@@ -64,12 +67,15 @@
     import Question2 from './components/Question2'
     import FilePicker from './components/FilePicker'
     import eventHub from './eventHub'
+    import Clipboard from 'clipboard'
 
     export default {
         props: ['alternatives', 'tree'],
         name: 'App',
         mounted() {
             eventHub.$on('update', () => this.$forceUpdate())
+
+            new Clipboard(this.$refs.clipboard)
         },
         components: {
             RecursiveMadness,
@@ -323,7 +329,15 @@
         font-size: .9rem;
         font-weight: 300;
         color: #fff;
-        box-shadow: inset 0 0 12px #151515, 1px 1px 11px #464646
+        box-shadow: inset 0 0 12px #151515, 1px 1px 11px #464646;
+        position: relative;
+    }
+
+    .clipboard {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        cursor: pointer;
     }
 
     .controls-wrap {
