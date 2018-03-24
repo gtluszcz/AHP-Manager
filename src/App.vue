@@ -171,7 +171,7 @@
                 document.body.removeChild(element)
             },
             download() {
-                this._download(`${this.tree.name}.json`, JSON.stringify(this.renderedTree()));
+                this._download(`${this.tree.name}.json`, JSON.stringify(this.renderedTree()))
             },
         },
     }
