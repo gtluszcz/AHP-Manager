@@ -51,9 +51,12 @@
                 </div>
             </div>
 
-            <!-- <div>
-                {{ priorityVector() }}
-            </div> -->
+            <div class="weights">
+                <h3>Weights</h3>
+                <div class="row weights__row" v-for="(weight, index) in priorityVector()" :key="index">
+                    <span>{{ alternatives[index].value }}</span><span>{{ weight.toFixed(3) }}</span>
+                </div>
+            </div>
 
             <div class="result">
                 <div class="hanger">
@@ -63,7 +66,12 @@
                             <path d="M0 0h24v24H0z" fill="none"/>
                         </svg>
                     </div>
-                    <div class="clipboard" ref="clipboard" :data-clipboard-text="JSON.stringify(renderedTree())" title="Copy to clipboard">
+                    <div
+                        class="clipboard"
+                        ref="clipboard"
+                        :data-clipboard-text="JSON.stringify(renderedTree())"
+                        title="Copy to clipboard"
+                    >
                         <svg fill="#fff" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
                             <path d="M0 0h24v24H0z" fill="none"></path>
                             <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path>
@@ -121,11 +129,9 @@
                 return goal
             },
             priorityVector() {
-                if (this.tree.matrix.length === 0) {
-                    return ''
-                }
-
-                return Maths.eigenvector(this.tree.matrix)
+                return (this.tree.matrix.length === 0 || this.alternatives.length === 0)
+                    ? ''
+                    : Maths.nodeVector(this.tree)
             },
             prettyResult() {
                 return JSON.stringify(this.renderedTree(), (k, v) => (v instanceof Array) ? JSON.stringify(v) : v, 2)
@@ -153,12 +159,10 @@
                 this.$root.alternatives = contents.alternatives.map(el => ({ value: el }))
 
                 const goal = Object.keys(contents).filter(c => c !== 'alternatives')[0]
-                const obj = this.convertNodeToOurs(contents[goal], goal)
 
-                return obj
-
+                return this.convertNodeToOurs(contents[goal], goal)
             },
-            convertNodeToOurs(node,name){
+            convertNodeToOurs(node, name) {
                 const obj = {}
 
                 obj.name = name
@@ -167,7 +171,7 @@
                 if (!Array.isArray(node)) {
                     obj.matrix = node.matrix.map(el => ({ value: el }))
 
-                    for (const crit of Object.keys(node).filter(c => c !== 'matrix')){
+                    for (const crit of Object.keys(node).filter(c => c !== 'matrix')) {
                         obj.criteria.push(this.convertNodeToOurs(node[crit], crit))
                     }
                 } else {
@@ -443,6 +447,24 @@
 
     .row {
         display: flex;
+    }
+
+    .weights {
+        margin-top: 5rem;
+        margin-bottom: 5rem;
+    }
+
+    .weights__row > span {
+        flex: 1;
+    }
+
+    .weights__row > span:first-child {
+        text-align: right;
+        padding-right: 1rem;
+    }
+
+    .weights__row > span:last-child {
+        padding-left: 1rem;
     }
 
     @media (max-width: 930px) {

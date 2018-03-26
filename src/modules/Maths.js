@@ -1,4 +1,4 @@
-import numeric from 'numeric'
+import Numeric from 'numeric'
 
 class Maths {
     static convert2dMatrixTo3d(matrix2d) {
@@ -16,34 +16,40 @@ class Maths {
     }
 
     static eigenvector(A) {
-        const result = numeric.eig(Maths.convert2dMatrixTo3d(A.map(el => el.value)))
+        const result = Numeric.eig(Maths.convert2dMatrixTo3d(A.map(el => el.value)))
 
-        if (typeof result.E.y !== 'undefined' || typeof result.lambda.y !== 'undefined' ) {
+        if (typeof result.E.y !== 'undefined' || typeof result.lambda.y !== 'undefined') {
             throw 'Complex eigenvalues and eigenvectors are not supported yet'
         }
 
-        const vector1 = [result.E.x[0][0], result.E.x[1][0], result.E.x[2][0]]
-        const vector2 = [result.E.x[0][1], result.E.x[1][1], result.E.x[2][1]]
-        const vector3 = [result.E.x[0][2], result.E.x[1][2], result.E.x[2][2]]
+        let maxLambdaIndex = 0
 
-        const value1 = result.lambda.x[0]
-        const value2 = result.lambda.x[1]
-        const value3 = result.lambda.x[2]
-
-        const maxValue = Math.max(value1, value2, value3)
-        let vector
-
-        if (value1 == maxValue) {
-            vector = vector1
-        } else if (value2 == maxValue) {
-            vector = vector2
-        } else if (velue3 == maxValue) {
-            vector = vector3
-        } else {
-            throw 'Ugh, oh. Floats do suck'
+        for (let i = 0; i < result.lambda.x.length; i++) {
+            if (result.lambda.x[i] > result.lambda.x[maxLambdaIndex]) {
+                maxLambdaIndex = i
+            }
         }
 
-        return vector.map(el => el / vector.reduce((accumulator, currentValue) => accumulator + currentValue))
+        let transpose = result.E.x[0].map((x, i) => result.E.x.map(x => x[i]))
+
+        let vector = transpose[maxLambdaIndex]
+
+        return vector.map(el => el / Numeric.sum(vector))
+    }
+
+    static nodeVector(node) {
+        if (node.criteria.length === 0) {
+            return Maths.eigenvector(node.matrix)
+        }
+
+        const compareVector = Maths.eigenvector(node.matrix)
+        let vector = 0
+
+        for (let el of compareVector) {
+            vector = Numeric.add(vector, Numeric.mul(el, Maths.nodeVector(node.criteria[compareVector.indexOf(el)])))
+        }
+
+        return vector
     }
 }
 
