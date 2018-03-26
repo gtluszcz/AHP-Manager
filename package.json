@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "clipboard": "^2.0.0",
+    "numeric": "^1.2.6",
     "vue": "^2.5.2"
   },
   "devDependencies": {

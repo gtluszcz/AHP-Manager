@@ -51,6 +51,10 @@
                 </div>
             </div>
 
+            <!-- <div>
+                {{ priorityVector() }}
+            </div> -->
+
             <div class="result">
                 <div class="hanger">
                     <div class="file" @click="download" title="Download file">
@@ -79,6 +83,7 @@
     import FilePicker from './components/FilePicker'
     import eventHub from './eventHub'
     import Clipboard from 'clipboard'
+    import Maths from './modules/Maths'
 
     export default {
         props: ['alternatives', 'tree'],
@@ -114,6 +119,13 @@
                 goal[this.tree.name] = this.renderNode(this.tree)
 
                 return goal
+            },
+            priorityVector() {
+                if (this.tree.matrix.length === 0) {
+                    return ''
+                }
+
+                return Maths.eigenvector(this.tree.matrix)
             },
             prettyResult() {
                 return JSON.stringify(this.renderedTree(), (k, v) => (v instanceof Array) ? JSON.stringify(v) : v, 2)
