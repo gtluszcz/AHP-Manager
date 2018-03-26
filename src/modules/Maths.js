@@ -16,6 +16,7 @@ class Maths {
     }
 
     static eigenvector(A) {
+
         //console.log(A.map(el => el.value))
         const matrix = Maths.convert2dMatrixTo3d(A.map(el => el.value))
 
@@ -44,6 +45,23 @@ class Maths {
         let vector = transpose[maxLambdaIndex]
 
         return vector.map(el => el / numeric.sum(vector))
+    }
+
+    static nodeVector(node){
+        if(node.criteria.length==0)
+            return Maths.eigenvector(node.matrix)
+
+
+
+        const compareVector = Maths.eigenvector(node.matrix)
+        let vector = 0
+        for(let el of compareVector){
+
+            vector=numeric.add(vector,numeric.mul(el,Maths.nodeVector(node.criteria[compareVector.indexOf(el)])))
+
+        }
+        return vector
+
     }
 }
 

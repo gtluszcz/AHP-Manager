@@ -119,13 +119,14 @@
                 goal[this.tree.name] = this.renderNode(this.tree)
 
                 return goal
+
             },
             priorityVector() {
-                if (this.tree.matrix.length === 0) {
+                if (this.tree.matrix.length === 0 || this.alternatives.length === 0) {
                     return ''
                 }
 
-                return Maths.eigenvector(this.tree.matrix)
+                return Maths.nodeVector(this.tree)
             },
             prettyResult() {
                 return JSON.stringify(this.renderedTree(), (k, v) => (v instanceof Array) ? JSON.stringify(v) : v, 2)
