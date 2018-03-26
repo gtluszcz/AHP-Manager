@@ -66,7 +66,7 @@
                         </svg>
                     </div>
                 </div>
-                <pre v-text="JSON.stringify(renderedTree(), null, 2)"></pre>
+                <pre v-text="prettyResult()"></pre>
             </div>
         </div>
     </div>
@@ -114,6 +114,14 @@
                 goal[this.tree.name] = this.renderNode(this.tree)
 
                 return goal
+            },
+            prettyResult() {
+                return JSON.stringify(this.renderedTree(), (k, v) => (v instanceof Array) ? JSON.stringify(v) : v, 2)
+                    .replace(/"\[/g, '[')
+                    .replace(/\]"/g, ']')
+                    .replace(/\\"/g, '"')
+                    .replace(/""/g, '"')
+                    .replace(/,(.)/g, ', $1')
             },
             renderNode(node) {
                 if (node.criteria != null && node.criteria.length > 0) {
