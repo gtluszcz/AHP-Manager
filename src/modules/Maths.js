@@ -16,12 +16,7 @@ class Maths {
     }
 
     static eigenvector(A) {
-        console.log(A.map(el => el.value))
-        const matrix = Maths.convert2dMatrixTo3d(A.map(el => el.value))
-
-        console.log(matrix)
-
-        const result = numeric.eig(matrix)
+        const result = numeric.eig(Maths.convert2dMatrixTo3d(A.map(el => el.value)))
 
         if (typeof result.E.y !== 'undefined' || typeof result.lambda.y !== 'undefined' ) {
             throw 'Complex eigenvalues and eigenvectors are not supported yet'
