@@ -1,21 +1,8 @@
-# ahp-manager
+# AHP Manager
+This repo contains code of the [AHP Manager](http://theahp.cf). It follows the specification specified [here](https://github.com/DCzajkowski/agh-ahp).
 
-> AHP Manager to quickly make good decisions
+## What is AHP?
+AHP stands for _Analytic hierarchy process_. It is a structured technique for organizing and analyzing complex decisions, based on mathematics and psychology.
 
-## Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## Authors & License
+The source code has been authored by [Grzegorz Tłuszcz](https://github.com/gtluszcz) and [Dariusz Czajkowski](https://twitter.com/CzajkowskiDarek). It is available under the [MIT license](https://opensource.org/licenses/MIT).
