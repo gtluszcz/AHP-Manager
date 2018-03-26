@@ -52,7 +52,21 @@
             </div>
 
             <div class="result">
-                <pre v-text="renderedTree()"></pre>
+                <div class="hanger">
+                    <div class="file" @click="download" title="Download file">
+                        <svg fill="#fff" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                            <path d="M0 0h24v24H0z" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="clipboard" ref="clipboard" :data-clipboard-text="JSON.stringify(renderedTree())" title="Copy to clipboard">
+                        <svg fill="#fff" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <pre v-text="JSON.stringify(renderedTree(), null, 2)"></pre>
             </div>
         </div>
     </div>
@@ -64,12 +78,15 @@
     import Question2 from './components/Question2'
     import FilePicker from './components/FilePicker'
     import eventHub from './eventHub'
+    import Clipboard from 'clipboard'
 
     export default {
         props: ['alternatives', 'tree'],
         name: 'App',
         mounted() {
             eventHub.$on('update', () => this.$forceUpdate())
+
+            new Clipboard(this.$refs.clipboard)
         },
         components: {
             RecursiveMadness,
@@ -96,7 +113,7 @@
                 goal.alternatives = this.$root.alternatives.map(el => el.value)
                 goal[this.tree.name] = this.renderNode(this.tree)
 
-                return JSON.stringify(goal, null, 2)
+                return goal
             },
             renderNode(node) {
                 if (node.criteria != null && node.criteria.length > 0) {
@@ -138,6 +155,23 @@
                 }
 
                 return obj
+            },
+            _download(filename, text) {
+                const element = document.createElement('a')
+
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
+                element.setAttribute('download', filename)
+
+                element.style.display = 'none'
+
+                document.body.appendChild(element)
+
+                element.click()
+
+                document.body.removeChild(element)
+            },
+            download() {
+                this._download(`${this.tree.name}.json`, JSON.stringify(this.renderedTree()))
             },
         },
     }
@@ -323,7 +357,20 @@
         font-size: .9rem;
         font-weight: 300;
         color: #fff;
-        box-shadow: inset 0 0 12px #151515, 1px 1px 11px #464646
+        box-shadow: inset 0 0 12px #151515, 1px 1px 11px #464646;
+        position: relative;
+    }
+
+    .hanger {
+        display: flex;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        cursor: pointer;
+    }
+
+    .hanger > div {
+        margin-left: 1rem;
     }
 
     .controls-wrap {
