@@ -9,7 +9,7 @@
     "start": "npm run dev",
     "lint": "eslint --ext .js,.vue src",
     "build": "node build/build.js",
-    "deploy": "npm run build && cd dist && gaa && gc Build && gp && cd .."
+    "deploy": "npm run build && cd dist && git add -A && git commit -m 'Build' && git push && cd .."
   },
   "dependencies": {
     "clipboard": "^2.0.0",
