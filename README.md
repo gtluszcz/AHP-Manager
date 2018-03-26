@@ -1,6 +1,8 @@
-AHP Manager is a web-based system for making better decisions. 📋 
+
 
 # AHP Manager
+AHP Manager is a web-based system for making better decisions. 📋 
+
 This repo contains code of the [AHP Manager](http://theahp.cf). It follows the specification specified [here](https://github.com/DCzajkowski/agh-ahp).
 
 ## What is AHP?
