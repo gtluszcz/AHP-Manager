@@ -51,9 +51,9 @@
                 </div>
             </div>
 
-            <!-- <div>
+            <div>
                 {{ priorityVector() }}
-            </div> -->
+            </div>
 
             <div class="result">
                 <div class="hanger">

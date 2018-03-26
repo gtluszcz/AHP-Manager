@@ -16,39 +16,34 @@ class Maths {
     }
 
     static eigenvector(A) {
-        console.log(A.map(el => el.value))
+        //console.log(A.map(el => el.value))
         const matrix = Maths.convert2dMatrixTo3d(A.map(el => el.value))
 
-        console.log(matrix)
+        //console.log(matrix)
 
         const result = numeric.eig(matrix)
+
 
         if (typeof result.E.y !== 'undefined' || typeof result.lambda.y !== 'undefined' ) {
             throw 'Complex eigenvalues and eigenvectors are not supported yet'
         }
 
-        const vector1 = [result.E.x[0][0], result.E.x[1][0], result.E.x[2][0]]
-        const vector2 = [result.E.x[0][1], result.E.x[1][1], result.E.x[2][1]]
-        const vector3 = [result.E.x[0][2], result.E.x[1][2], result.E.x[2][2]]
 
-        const value1 = result.lambda.x[0]
-        const value2 = result.lambda.x[1]
-        const value3 = result.lambda.x[2]
-
-        const maxValue = Math.max(value1, value2, value3)
-        let vector
-
-        if (value1 == maxValue) {
-            vector = vector1
-        } else if (value2 == maxValue) {
-            vector = vector2
-        } else if (velue3 == maxValue) {
-            vector = vector3
-        } else {
-            throw 'Ugh, oh. Floats do suck'
+        let maxLambdaIndex = 0
+        for(let i=0;i<result.lambda.x.length;i++){
+            if (result.lambda.x[i]>result.lambda.x[maxLambdaIndex]){
+                maxLambdaIndex=i
+            }
         }
+        //console.log(result.E.x)
 
-        return vector.map(el => el / vector.reduce((accumulator, currentValue) => accumulator + currentValue))
+        let transpose = result.E.x[0].map((x,i) => result.E.x.map(x => x[i]))
+
+        //console.log(transpose)
+
+        let vector = transpose[maxLambdaIndex]
+
+        return vector.map(el => el / numeric.sum(vector))
     }
 }
 
