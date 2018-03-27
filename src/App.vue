@@ -52,9 +52,24 @@
             </div>
 
             <div class="weights">
-                <h3>Weights</h3>
-                <div class="row weights__row" v-for="(weight, index) in priorityVector()" :key="index">
-                    <span>{{ alternatives[index].value }}</span><span>{{ weight.toFixed(3) }}</span>
+                <div class="weights__header">
+                    <h3>Weights</h3>
+                    <div class="label">
+                        <label class="ui-switch" :class="{ 'checked': isEigenvectorMethod }">
+                            <input type="checkbox" class="ui-switch-input" v-model="isEigenvectorMethod">
+
+                            <div class="ui-switch-track"></div>
+                            <div class="ui-switch-thumb"></div>
+
+                            <div class="ui-switch-focus-ring"></div>
+                        </label>
+                        <span v-text="isEigenvectorMethod ? 'Eigenvector method' : 'Geometric mean method'"></span>
+                    </div>
+                </div>
+                <div>
+                    <div class="row weights__row" v-for="(weight, index) in priorityVector()" :key="index">
+                        <span>{{ alternatives[index].value }}</span><span>{{ weight }}</span>
+                    </div>
                 </div>
             </div>
 
@@ -92,10 +107,17 @@
     import eventHub from './eventHub'
     import Clipboard from 'clipboard'
     import Maths from './modules/Maths'
+    import EigenvectorMethod from './modules/EigenvectorMethod'
+    import MeanMethod from './modules/MeanMethod'
 
     export default {
         props: ['alternatives', 'tree'],
         name: 'App',
+        data() {
+            return {
+                isEigenvectorMethod: true,
+            }
+        },
         mounted() {
             eventHub.$on('update', () => this.$forceUpdate())
 
@@ -129,9 +151,11 @@
                 return goal
             },
             priorityVector() {
-                return (this.tree.matrix.length === 0 || this.alternatives.length === 0)
-                    ? ''
-                    : Maths.nodeVector(this.tree)
+                if (this.tree.matrix.length === 0 || this.alternatives.length === 0) {
+                    return ''
+                }
+
+                return this.isEigenvectorMethod ? EigenvectorMethod.priorityVector(this.tree) : MeanMethod.priorityVector(this.tree)
             },
             prettyResult() {
                 return JSON.stringify(this.renderedTree(), (k, v) => (v instanceof Array) ? JSON.stringify(v) : v, 2)
@@ -453,6 +477,30 @@
         margin-bottom: 5rem;
     }
 
+    .weights__header {
+        display: flex;
+    }
+
+    .weights__header > h3 {
+        margin: 0;
+        flex: 1;
+    }
+
+    .weights__header > .label {
+        width: 16rem;
+        display: flex;
+    }
+
+    .weights__header > .label > label {
+        flex: 1;
+    }
+
+    .weights__header > .label > label,
+    .weights__header > .label > span {
+        display: block;
+        text-align: right;
+    }
+
     .weights__row > span {
         flex: 1;
     }
@@ -468,6 +516,70 @@
 
     .result pre {
         font-family: monospace;
+    }
+
+    .ui-switch {
+        position: relative;
+    }
+
+    .ui-switch.checked .ui-switch-track {
+        background-color: rgba(243,33,33,0.5);
+    }
+
+    .ui-switch.checked .ui-switch-thumb {
+        left: 14px;
+        background-color: #f32121;
+    }
+
+    .ui-switch.checked .ui-switch-focus-ring {
+        left: 3px;
+        background-color: rgba(243,33,33,0.12);
+    }
+
+    .ui-switch-track {
+        position: absolute;
+        top: 3px;
+        height: 14px;
+        width: 34px;
+        background-color: rgba(0,0,0,0.26);
+        border-radius: 8px;
+        transition: background-color 0.1s linear;
+    }
+
+    .ui-switch-thumb {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #fafafa;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+        transition: all 0.2s ease;
+    }
+
+    .ui-switch-focus-ring {
+        position: absolute;
+        top: -11px;
+        left: -11px;
+        z-index: -1;
+        border-radius: 50%;
+        width: 42px;
+        height: 42px;
+        background-color: rgba(0,0,0,0.1);
+        transform: scale(0);
+        opacity: 0;
+        transition: all 0.2s ease;
+    }
+
+    .ui-switch-input {
+        position: absolute;
+        opacity: 0;
+    }
+
+    .ui-switch-input:focus ~ .ui-switch-focus-ring {
+        transform: scale(1);
+        opacity: 1;
     }
 
     @media (max-width: 930px) {
