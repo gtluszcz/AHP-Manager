@@ -1,4 +1,4 @@
-import Numeric from 'numeric'
+import Numeric from 'Numeric'
 
 class Maths {
     static convert2dMatrixTo3d(matrix2d) {
@@ -18,7 +18,10 @@ class Maths {
     static eigenvector(A) {
         const result = Numeric.eig(Maths.convert2dMatrixTo3d(A.map(el => el.value)))
 
-        if (typeof result.E.y !== 'undefined' || typeof result.lambda.y !== 'undefined') {
+
+
+        if (typeof result.E.y !== 'undefined' || typeof result.lambda.y !== 'undefined' ) {
+
             throw 'Complex eigenvalues and eigenvectors are not supported yet'
         }
 
@@ -33,22 +36,27 @@ class Maths {
         let transpose = result.E.x[0].map((x, i) => result.E.x.map(x => x[i]))
 
         let vector = transpose[maxLambdaIndex]
-
         return vector.map(el => el / Numeric.sum(vector))
     }
 
-    static nodeVector(node) {
-        if (node.criteria.length === 0) {
+
+
+    static nodeVector(node){
+        if(node.criteria.length==0) {
+            console.log(node.name, Maths.eigenvector(node.matrix))
             return Maths.eigenvector(node.matrix)
         }
 
         const compareVector = Maths.eigenvector(node.matrix)
+        console.log(node.name,compareVector)
         let vector = 0
+        let counter = 0
+        for(let el of compareVector){
 
-        for (let el of compareVector) {
-            vector = Numeric.add(vector, Numeric.mul(el, Maths.nodeVector(node.criteria[compareVector.indexOf(el)])))
+            vector=Numeric.add(vector,Numeric.mul(el,Maths.nodeVector(node.criteria[counter])))
+            counter++
+
         }
-
         return vector
     }
 }
