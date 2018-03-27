@@ -51,12 +51,12 @@
                 </div>
             </div>
 
-            <!-- <div class="weights">
+            <div class="weights">
                 <h3>Weights</h3>
                 <div class="row weights__row" v-for="(weight, index) in priorityVector()" :key="index">
                     <span>{{ alternatives[index].value }}</span><span>{{ weight.toFixed(3) }}</span>
                 </div>
-            </div> -->
+            </div>
 
             <div class="result">
                 <div class="hanger">
