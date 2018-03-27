@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        <div v-if="subtree.criteria.length == 0">
+        <div v-if="subtree.criteria.length === 0">
             <div class="parent" v-if="alternatives.length > 1">based on: {{ subtree.name }}</div>
             <div class="div" v-for="i in alternatives" :key="i.id">
                 <div class="div" v-for="j in alternatives" :key="j.id">

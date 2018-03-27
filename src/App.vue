@@ -51,19 +51,19 @@
                 </div>
             </div>
 
-            <div class="weights">
+            <!-- <div class="weights">
                 <h3>Weights</h3>
                 <div class="row weights__row" v-for="(weight, index) in priorityVector()" :key="index">
                     <span>{{ alternatives[index].value }}</span><span>{{ weight.toFixed(3) }}</span>
                 </div>
-            </div>
+            </div> -->
 
             <div class="result">
                 <div class="hanger">
                     <div class="file" @click="download" title="Download file">
                         <svg fill="#fff" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-                            <path d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path>
+                            <path d="M0 0h24v24H0z" fill="none"></path>
                         </svg>
                     </div>
                     <div
@@ -171,8 +171,8 @@
                 if (!Array.isArray(node)) {
                     obj.matrix = node.matrix.map(el => ({ value: el }))
 
-                    for (const crit of Object.keys(node).filter(c => c !== 'matrix')) {
-                        obj.criteria.push(this.convertNodeToOurs(node[crit], crit))
+                    for (const criterion of Object.keys(node).filter(c => c !== 'matrix')) {
+                        obj.criteria.push(this.convertNodeToOurs(node[criterion], criterion))
                     }
                 } else {
                     obj.matrix = node.map(el => ({ value: el }))
@@ -206,13 +206,13 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        font-family: Montserrat, Arial, sans-serif;
     }
 
     body {
         background: linear-gradient(180deg, rgb(35, 200, 219) 0%, rgb(27, 156, 212) 50%, rgb(74, 86, 226) 100%);
         min-height: 100vh;
         color: white;
-        font-family: Montserrat;
         display: flex;
         justify-content: center;
     }
@@ -232,11 +232,10 @@
     }
 
     .subtitle {
-        margin: 0 auto;
         text-align: center;
         font-weight: 100;
         font-size: 1rem;
-        margin-bottom: 2rem;
+        margin: 0 auto 2rem;
     }
 
     .subtitle a,

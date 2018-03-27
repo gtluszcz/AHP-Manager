@@ -4,8 +4,6 @@
             <span>Upload Custom File</span>
             <input id="file" type="file" name="file" @change="processFile" accept=".json">
         </label>
-
-        <!-- <div v-text="fileContent"></div> -->
     </div>
 </template>
 
@@ -48,7 +46,6 @@
         width: 14rem;
         height: 3rem;
         border-radius: 3rem;
-        font-family: Montserrat;
         font-size: 1rem;
         cursor: pointer;
         background: #fff;
