@@ -466,6 +466,10 @@
         padding-left: 1rem;
     }
 
+    .result pre {
+        font-family: monospace;
+    }
+
     @media (max-width: 930px) {
         .row-top {
             flex-direction: column;
