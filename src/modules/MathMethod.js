@@ -1,6 +1,6 @@
 import Numeric from 'Numeric'
 
-class Maths {
+class MathMethod {
     static priorityVector(node) {
         if (node.criteria.length === 0) {
             return this._calculate(node.matrix)
@@ -35,4 +35,4 @@ class Maths {
 }
 
 
-export default Maths
+export default MathMethod

@@ -1,7 +1,7 @@
 import Numeric from 'Numeric'
-import Maths from './Maths'
+import MathMethod from './MathMethod'
 
-class MeanMethod extends Maths {
+class MeanMethod extends MathMethod {
     static _calculate(A) {
         const matrix = A.map(el => el.value)
         const vector = []

@@ -1,7 +1,7 @@
 import Numeric from 'Numeric'
-import Maths from './Maths'
+import MathMethod from './MathMethod'
 
-class EigenvectorMethod extends Maths {
+class EigenvectorMethod extends MathMethod {
     static _calculate(A) {
         const result = Numeric.eig(this.convert2dMatrixTo3d(A.map(el => el.value)))
 

@@ -106,7 +106,6 @@
     import FilePicker from './components/FilePicker'
     import eventHub from './eventHub'
     import Clipboard from 'clipboard'
-    import Maths from './modules/Maths'
     import EigenvectorMethod from './modules/EigenvectorMethod'
     import MeanMethod from './modules/MeanMethod'
 
@@ -309,7 +308,7 @@
     }
 
     .alt.number {
-        width: 3rem;
+        width: 4rem;
         text-align: center;
         margin: 0 1rem;
     }
