@@ -2,7 +2,7 @@ import Numeric from 'Numeric'
 
 class MathMethod {
     static priorityVector(node) {
-        if (node.criteria.length === 0) {
+        if (Array.isArray(node.criteria) && node.criteria.length === 0) {
             return this._calculate(node.matrix)
         }
 
@@ -10,6 +10,7 @@ class MathMethod {
 
         let vector = 0
         let counter = 0
+
 
         for (let el of compareVector) {
             vector = Numeric.add(vector, Numeric.mul(el, this.priorityVector(node.criteria[counter])))

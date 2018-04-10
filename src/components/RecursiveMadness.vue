@@ -55,9 +55,8 @@
             },
             subtract() {
                 this.$parent.subtree.criteria.splice(this.$parent.subtree.criteria.indexOf(this.subtree), 1)
-
-                this.setMatrix()
-                this.$root.setLastMatrixes(this.$root.tree)
+                this.setParentMatrix()
+                eventHub.$emit('update')
             },
             setMatrix() {
                 this.subtree.matrix = []
@@ -67,6 +66,17 @@
                 for (let i = 0; i < n; i++) {
                     for (let j = 0; j < n; j++) {
                         this.subtree.matrix[i * n + j] = (i === j) ? { value: 1 } : { value: 0 }
+                    }
+                }
+            },
+            setParentMatrix() {
+                this.$parent.subtree.matrix = []
+
+                const n = this.$parent.subtree.criteria.length
+
+                for (let i = 0; i < n; i++) {
+                    for (let j = 0; j < n; j++) {
+                        this.$parent.subtree.matrix[i * n + j] = (i === j) ? { value: 1 } : { value: 0 }
                     }
                 }
             },

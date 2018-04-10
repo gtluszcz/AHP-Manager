@@ -153,7 +153,6 @@
                 if (this.tree.matrix.length === 0 || this.alternatives.length === 0) {
                     return ''
                 }
-
                 return this.isEigenvectorMethod ? EigenvectorMethod.priorityVector(this.tree) : MeanMethod.priorityVector(this.tree)
             },
             prettyResult() {
