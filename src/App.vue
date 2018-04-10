@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 <div>
-                    <div class="row weights__row" v-for="(weight, index) in priorityVector()" :key="index">
+                    <div class="row weights__row" v-for="(weight, index) in priorityVector()" :class="{ 'bold': weight === Math.max(...priorityVector()) }" :key="index">
                         <span>{{ alternatives[index].value }}</span><span>{{ weight }}</span>
                     </div>
                 </div>
@@ -344,6 +344,10 @@
 
     .nest {
         padding-left: 2rem;
+    }
+
+    .bold {
+        font-weight: 700;
     }
 
     button {
